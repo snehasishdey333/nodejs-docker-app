@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example123
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+
+  app:
+    build: .
+    container_name: nodeapp
+    ports:
+      - "5001:5001"
+    env_file: .env
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+    command: npm run dev
+
+volumes:
+  mongo-data:
